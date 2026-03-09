@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <Reference Include="TestSet">
-      <HintPath>..\..\..\TestSet.dll</HintPath>
+      <HintPath>..\TestSet.dll</HintPath>
     </Reference>
   </ItemGroup>
 

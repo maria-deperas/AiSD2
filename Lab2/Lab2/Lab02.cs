@@ -97,6 +97,7 @@ namespace ASD
             int n = Z.Length;
             int m = umbrellaType.Length;
 
+            // tablica sum skumulowanych
             int[] sum = new int[n + 1];
             sum[0] = 0;
 
@@ -105,16 +106,22 @@ namespace ASD
                 sum[i] = sum[i - 1] + Z[i - 1];
             }
 
+            // tab[i] - maksymalny zysk dla pierwszych i punktów 
             int[] tab = new int[n + 1];
+            // model[i] - indeks modelu parasolki kończącej się w punkcie i
+            // -1, jeśli nie stawiamy parasolki
             int[] model = new int[n + 1];
+            // idx[i] - indeks przed początkiem parasolki, która kończy się w i
             int[] idx = new int[n + 1];
 
             for(int i = 1; i <= n; i++)
             {
+                // przypadek 1: nie stawiamy parasolki kończącej się w i
                 tab[i] = tab[i - 1];
                 model[i] = -1;
                 idx[i] = i - 1;
 
+                // sprawdzamy wszystkie modele parasolek
                 for(int j = 0; j < m; j++)
                 {
                     int w = 1 + 2 * umbrellaType[j].radius;
@@ -123,6 +130,7 @@ namespace ASD
 
                     int profit = sum[i] - sum[left] - umbrellaType[j].cost + tab[left];
 
+                    // wybieramy parasolkę z największym zyskiem
                     if(profit > tab[i])
                     {
                         tab[i] = profit;
@@ -132,15 +140,19 @@ namespace ASD
                 }
             }
 
+            // lista pozycji i modeli rozmieszczonych parasolek
             List<(int position, int model)> result = new List<(int position, int model)>();
 
             int pos = n;
             while (pos > 0)
             {
                 int currmodel = model[pos];
+
+                // jeśli w danym punkcie kończy się parasolka dodajemy do listy indeks jej środka i jej model
                 if (currmodel != -1)
                 {
-                    int position = pos - umbrellaType[currmodel].radius - 1;
+                    int rad = umbrellaType[currmodel].radius;
+                    int position = pos - rad - 1;
                     if(position < 0) position = 0;
                     result.Add((position, currmodel));
                     pos = idx[pos];
